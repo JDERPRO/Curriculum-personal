@@ -1,106 +1,125 @@
 /* ========================================
-   CV Professional — Rendering Engine
-   Reads cv-data.json and renders the CV
+   CV Professional — PRO Rendering Engine
+   v2.0 with effects
    ======================================== */
-
 (async function () {
   'use strict';
 
-  /* --- Load Data --- */
   let DATA;
   try {
     const res = await fetch('data/cv-data.json');
     DATA = await res.json();
   } catch (e) {
-    console.error('Error loading CV data:', e);
     document.body.innerHTML = '<p style="color:red;text-align:center;margin-top:40vh">Error cargando datos del CV.</p>';
     return;
   }
 
-  const $ = (sel) => document.querySelector(sel);
-  const $$ = (sel) => document.querySelectorAll(sel);
+  const $ = (s) => document.querySelector(s);
+  const $$ = (s) => document.querySelectorAll(s);
 
-  /* --- Hero --- */
+  /* ============ HERO ============ */
   function renderHero() {
     const p = DATA.personal;
-    const nameEl = $('#heroName');
-    nameEl.innerHTML = `${p.name.replace('Jorge', '<span class="accent">Jorge</span>')}`;
-
+    $('#heroName').innerHTML = p.name.replace('Jorge', '<span class="accent">Jorge</span>');
     $('#heroTitle').textContent = `${p.title} | ${p.subtitle}`;
 
-    // Photo — fallback to placeholder
     const photo = $('#heroPhoto');
     photo.src = p.photo;
     photo.onerror = () => {
-      photo.src = 'https://ui-avatars.com/api/?name=Jorge+Ramirez&size=280&background=f0c040&color=0a0a0f&font-size=0.35&bold=true';
+      photo.src = `https://ui-avatars.com/api/?name=Jorge+Ramirez&size=300&background=f0c040&color=0a0a0f&font-size=0.33&bold=true`;
     };
 
-    // Buttons
-    const btns = $('#heroButtons');
-    btns.innerHTML = `
-      <a href="#contact" class="btn btn-primary">📬 Contactar</a>
-      <a href="${p.linkedin}" target="_blank" rel="noopener" class="btn btn-outline">in LinkedIn</a>
-      <a href="${p.github}" target="_blank" rel="noopener" class="btn btn-outline">⟨/⟩ GitHub</a>
-      <a href="${p.website}" target="_blank" rel="noopener" class="btn btn-outline">⚡ Bitform</a>
+    $('#heroButtons').innerHTML = `
+      <a href="#contact" class="btn btn-primary"><span>📬 Contactar</span></a>
+      <a href="${p.linkedin}" target="_blank" class="btn btn-outline">in LinkedIn</a>
+      <a href="${p.github}" target="_blank" class="btn btn-outline">⟨/⟩ GitHub</a>
+      <a href="${p.website}" target="_blank" class="btn btn-outline">⚡ Bitform</a>
     `;
   }
 
-  /* --- Stats --- */
+  /* ============ TYPING EFFECT ============ */
+  function initTyping() {
+    const phrases = [
+      '// automatizando el futuro de la construcción',
+      '// Revit API · Python · C# · Dynamo',
+      '// +50h de ahorro mensual por proyecto',
+      '// creando plugins que hablan por mí'
+    ];
+    const el = $('#typingText');
+    let phraseIdx = 0, charIdx = 0, deleting = false;
+
+    function type() {
+      const current = phrases[phraseIdx];
+      if (!deleting) {
+        el.textContent = current.substring(0, charIdx + 1);
+        charIdx++;
+        if (charIdx === current.length) {
+          setTimeout(() => { deleting = true; type(); }, 2200);
+          return;
+        }
+        setTimeout(type, 50 + Math.random() * 30);
+      } else {
+        el.textContent = current.substring(0, charIdx - 1);
+        charIdx--;
+        if (charIdx === 0) {
+          deleting = false;
+          phraseIdx = (phraseIdx + 1) % phrases.length;
+          setTimeout(type, 400);
+          return;
+        }
+        setTimeout(type, 25);
+      }
+    }
+    type();
+  }
+
+  /* ============ STATS with counter animation ============ */
   function renderStats() {
     const bar = $('#statsBar');
-    bar.innerHTML = DATA.about.stats.map(s => `
-      <div class="stat-item reveal">
-        <span class="stat-value">${s.value}</span>
+    bar.innerHTML = DATA.about.stats.map((s, i) => `
+      <div class="stat-item reveal reveal-delay-${i % 4}">
+        <span class="stat-value" data-target="${s.value}">${s.value}</span>
         <span class="stat-label">${s.label}</span>
       </div>
     `).join('');
   }
 
-  /* --- About --- */
+  /* ============ ABOUT ============ */
   function renderAbout() {
     $('#aboutSummary').textContent = DATA.about.summary;
     $('#aboutHighlights').innerHTML = DATA.about.highlights.map(h => `
-      <li style="padding-left:20px;position:relative;color:var(--text-secondary);font-size:0.9rem;">
-        <span style="position:absolute;left:0;color:var(--accent);">▸</span>${h}
+      <li style="padding-left:22px;position:relative;color:var(--text-secondary);font-size:0.9rem;transition:var(--transition);">
+        <span style="position:absolute;left:0;color:var(--accent);font-weight:bold;">▹</span>${h}
       </li>
     `).join('');
   }
 
-  /* --- Experience Timeline --- */
+  /* ============ EXPERIENCE ============ */
   function renderExperience() {
-    const tl = $('#timeline');
-    tl.innerHTML = DATA.experience.map(exp => `
+    $('#timeline').innerHTML = DATA.experience.map(exp => `
       <div class="timeline-item reveal">
         <div class="card">
+          <div class="card-glow"></div>
           <div class="timeline-period">${exp.period}</div>
           <div class="timeline-role">${exp.role}</div>
           <div class="timeline-company">${exp.company}</div>
           <div class="timeline-location">${exp.location} · ${exp.type}</div>
           <p class="timeline-desc">${exp.description}</p>
-          ${exp.achievements ? `
-            <ul class="timeline-achievements">
-              ${exp.achievements.map(a => `<li>${a}</li>`).join('')}
-            </ul>
-          ` : ''}
-          <div class="timeline-tags">
-            ${exp.tags.map(t => `<span class="tag">${t}</span>`).join('')}
-          </div>
+          ${exp.achievements ? `<ul class="timeline-achievements">${exp.achievements.map(a => `<li>${a}</li>`).join('')}</ul>` : ''}
+          <div class="timeline-tags">${exp.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
         </div>
       </div>
     `).join('');
   }
 
-  /* --- Education --- */
+  /* ============ EDUCATION ============ */
   function renderEducation() {
-    const grid = $('#educationGrid');
-    grid.innerHTML = DATA.education.map(edu => `
+    $('#educationGrid').innerHTML = DATA.education.map(edu => `
       <div class="card edu-card ${edu.highlight ? 'highlight' : ''} reveal">
+        <div class="card-glow"></div>
         <div class="edu-icon"><span>${edu.icon}</span></div>
         <div>
-          <div class="edu-degree">
-            ${edu.degree}
-            ${edu.highlight ? '<span class="badge-progress">EN CURSO</span>' : ''}
-          </div>
+          <div class="edu-degree">${edu.degree}${edu.highlight ? '<span class="badge-progress">EN CURSO</span>' : ''}</div>
           <div class="edu-institution">${edu.institution}</div>
           <div class="edu-period">${edu.period}</div>
           ${edu.note ? `<div class="edu-note">${edu.note}</div>` : ''}
@@ -109,16 +128,14 @@
     `).join('');
   }
 
-  /* --- Certifications --- */
+  /* ============ CERTIFICATIONS ============ */
   function renderCertifications() {
-    const container = $('#certificationsContainer');
     const tiers = [
       { label: 'Certificaciones Destacadas', tier: 1 },
       { label: 'Certificaciones Complementarias', tier: 2 },
       { label: 'Cursos y Formación', tier: 3 }
     ];
-
-    container.innerHTML = tiers.map(({ label, tier }) => {
+    $('#certificationsContainer').innerHTML = tiers.map(({ label, tier }) => {
       const certs = DATA.certifications.filter(c => c.tier === tier);
       if (!certs.length) return '';
       return `
@@ -126,16 +143,13 @@
         <div class="certs-grid">
           ${certs.map(c => `
             <div class="card cert-card reveal">
+              <div class="card-glow"></div>
               <div class="cert-icon">${c.icon}</div>
               <div>
                 <div class="cert-name">${c.name}</div>
                 <div class="cert-issuer">${c.issuer}</div>
                 <div class="cert-date">${c.date}</div>
-                ${c.skills ? `
-                  <div class="cert-skills">
-                    ${c.skills.map(s => `<span class="tag blue">${s}</span>`).join('')}
-                  </div>
-                ` : ''}
+                ${c.skills ? `<div class="cert-skills">${c.skills.map(s => `<span class="tag blue">${s}</span>`).join('')}</div>` : ''}
               </div>
             </div>
           `).join('')}
@@ -144,11 +158,11 @@
     }).join('');
   }
 
-  /* --- Skills --- */
+  /* ============ SKILLS ============ */
   function renderSkills() {
-    const grid = $('#skillsGrid');
-    grid.innerHTML = DATA.skills.categories.map(cat => `
+    $('#skillsGrid').innerHTML = DATA.skills.categories.map(cat => `
       <div class="card skill-category reveal">
+        <div class="card-glow"></div>
         <h3>${cat.icon} ${cat.name}</h3>
         ${cat.items.map(skill => `
           <div class="skill-item">
@@ -165,38 +179,36 @@
     `).join('');
   }
 
-  /* --- Projects --- */
+  /* ============ PROJECTS ============ */
   function renderProjects() {
-    const grid = $('#projectsGrid');
-    grid.innerHTML = DATA.projects.map(proj => `
+    $('#projectsGrid').innerHTML = DATA.projects.map(proj => `
       <div class="card project-card reveal">
+        <div class="card-glow"></div>
         <div class="project-icon">${proj.icon}</div>
         <h3>${proj.name}</h3>
         <p>${proj.description}</p>
-        <div class="timeline-tags" style="margin-bottom:14px;">
-          ${proj.tags.map(t => `<span class="tag">${t}</span>`).join('')}
-        </div>
-        ${proj.url !== '#' ? `<a href="${proj.url}" target="_blank" rel="noopener" class="project-link">Ver proyecto →</a>` : '<span style="color:var(--text-muted);font-size:0.82rem;">Próximamente</span>'}
+        <div class="timeline-tags" style="margin-bottom:14px;">${proj.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+        ${proj.url !== '#' ? `<a href="${proj.url}" target="_blank" class="project-link">Ver proyecto →</a>` : '<span style="color:var(--text-muted);font-size:0.82rem;">🔜 Próximamente</span>'}
       </div>
     `).join('');
   }
 
-  /* --- Awards --- */
+  /* ============ AWARDS ============ */
   function renderAwards() {
-    const grid = $('#awardsGrid');
-    grid.innerHTML = DATA.awards.map(aw => `
+    $('#awardsGrid').innerHTML = DATA.awards.map(aw => `
       <div class="card award-card reveal">
+        <div class="card-glow"></div>
         <div class="award-icon">${aw.icon}</div>
         <div>
           <div class="award-title">${aw.title}</div>
           <div class="award-issuer">${aw.issuer}</div>
-          ${aw.url ? `<a href="${aw.url}" target="_blank" rel="noopener" style="font-size:0.8rem;">Ver video →</a>` : ''}
+          ${aw.url ? `<a href="${aw.url}" target="_blank" style="font-size:0.8rem;">Ver video →</a>` : ''}
         </div>
       </div>
     `).join('');
   }
 
-  /* --- Contact --- */
+  /* ============ CONTACT ============ */
   function renderContact() {
     const p = DATA.personal;
     const items = [
@@ -207,81 +219,97 @@
       { icon: '⟨/⟩', label: 'GitHub', value: 'Ver repos', href: p.github },
       { icon: '🎥', label: 'YouTube', value: 'Ver canal', href: p.youtube }
     ];
-    const grid = $('#contactGrid');
-    grid.innerHTML = items.map(item => `
-      <div class="card contact-item">
-        <div class="contact-icon">${item.icon}</div>
+    $('#contactGrid').innerHTML = items.map(i => `
+      <div class="card contact-item reveal">
+        <div class="card-glow"></div>
+        <div class="contact-icon">${i.icon}</div>
         <div>
-          <div class="contact-label">${item.label}</div>
-          ${item.href
-            ? `<a href="${item.href}" target="_blank" rel="noopener" class="contact-value">${item.value}</a>`
-            : `<div class="contact-value">${item.value}</div>`
-          }
+          <div class="contact-label">${i.label}</div>
+          ${i.href ? `<a href="${i.href}" target="_blank" class="contact-value">${i.value}</a>` : `<div class="contact-value">${i.value}</div>`}
         </div>
       </div>
     `).join('');
   }
 
-  /* --- Footer --- */
+  /* ============ FOOTER ============ */
   function renderFooter() {
     const p = DATA.personal;
     $('#year').textContent = new Date().getFullYear();
     $('#footerLinks').innerHTML = `
-      <a href="${p.linkedin}" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="${p.github}" target="_blank" rel="noopener">GitHub</a>
-      <a href="${p.youtube}" target="_blank" rel="noopener">YouTube</a>
-      <a href="${p.website}" target="_blank" rel="noopener">Bitform</a>
-      <a href="${p.blog}" target="_blank" rel="noopener">Blog</a>
+      <a href="${p.linkedin}" target="_blank">LinkedIn</a>
+      <a href="${p.github}" target="_blank">GitHub</a>
+      <a href="${p.youtube}" target="_blank">YouTube</a>
+      <a href="${p.website}" target="_blank">Bitform</a>
+      <a href="${p.blog}" target="_blank">Blog</a>
     `;
   }
 
-  /* --- Scroll Reveal --- */
+  /* ============ SCROLL REVEAL ============ */
   function initScrollReveal() {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
-
-          // Animate skill bars within this element
-          const bars = entry.target.querySelectorAll('.skill-bar-fill');
-          bars.forEach(bar => {
+          // Animate skill bars
+          entry.target.querySelectorAll('.skill-bar-fill').forEach(bar => {
             setTimeout(() => {
               bar.style.width = bar.dataset.level + '%';
+              setTimeout(() => bar.classList.add('animated'), 1400);
             }, 200);
           });
         }
       });
-    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-
+    }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
     $$('.reveal').forEach(el => observer.observe(el));
   }
 
-  /* --- Mobile Nav --- */
-  function initNav() {
-    const toggle = $('#navToggle');
-    const links = $('#navLinks');
-    toggle.addEventListener('click', () => {
-      links.classList.toggle('active');
-    });
-    // Close on link click
-    links.querySelectorAll('a').forEach(a => {
-      a.addEventListener('click', () => links.classList.remove('active'));
-    });
-    // Navbar scroll effect
-    let lastScroll = 0;
-    window.addEventListener('scroll', () => {
-      const navbar = $('#navbar');
-      const scrollTop = window.scrollY;
-      if (scrollTop > 100) {
-        navbar.style.padding = '10px 0';
-      } else {
-        navbar.style.padding = '16px 0';
-      }
-      lastScroll = scrollTop;
+  /* ============ 3D TILT + GLOW FOLLOW ============ */
+  function initCardTilt() {
+    $$('.card').forEach(card => {
+      const glow = card.querySelector('.card-glow');
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const cx = rect.width / 2;
+        const cy = rect.height / 2;
+        const rotateX = (y - cy) / cy * -4;
+        const rotateY = (x - cx) / cx * 4;
+        card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-3px)`;
+        if (glow) {
+          glow.style.left = x + 'px';
+          glow.style.top = y + 'px';
+        }
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
     });
   }
 
-  /* --- Active nav link highlight --- */
+  /* ============ SCROLL PROGRESS BAR ============ */
+  function initScrollProgress() {
+    const bar = $('#scrollProgress');
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = (window.scrollY / h) * 100;
+      bar.style.width = pct + '%';
+    });
+  }
+
+  /* ============ NAVBAR ============ */
+  function initNav() {
+    const toggle = $('#navToggle');
+    const links = $('#navLinks');
+    toggle.addEventListener('click', () => links.classList.toggle('active'));
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => links.classList.remove('active')));
+
+    window.addEventListener('scroll', () => {
+      $('#navbar').classList.toggle('scrolled', window.scrollY > 80);
+    });
+  }
+
+  /* ============ ACTIVE NAV HIGHLIGHT ============ */
   function initActiveNav() {
     const sections = $$('.section, .hero');
     const navLinks = $$('.nav-links a');
@@ -290,17 +318,15 @@
         if (entry.isIntersecting) {
           const id = entry.target.id;
           navLinks.forEach(link => {
-            link.style.color = link.getAttribute('href') === `#${id}`
-              ? 'var(--accent)'
-              : '';
+            link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
           });
         }
       });
     }, { threshold: 0.3 });
-    sections.forEach(sec => observer.observe(sec));
+    sections.forEach(s => observer.observe(s));
   }
 
-  /* --- Render All --- */
+  /* ============ RENDER ALL ============ */
   renderHero();
   renderStats();
   renderAbout();
@@ -313,9 +339,11 @@
   renderContact();
   renderFooter();
 
-  // Init after DOM is painted
   requestAnimationFrame(() => {
+    initTyping();
     initScrollReveal();
+    initCardTilt();
+    initScrollProgress();
     initNav();
     initActiveNav();
   });

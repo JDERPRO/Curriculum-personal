@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Arq. Jorge Ramirez Guachalla — BIM Manager & Developer</title>
   <meta name="description" content="CV Profesional de Jorge Ramirez Guachalla. Arquitecto y Desarrollador BIM con +6 años de experiencia en automatización Revit API, Python y C#.">
-  <meta name="keywords" content="BIM Manager, Arquitecto, Revit API, C#, Python, Dynamo, Automatización BIM">
+  <meta name="keywords" content="BIM Manager, Arquitecto, Revit API, C#, Python, Dynamo, Automatización BIM, Bolivia">
   <meta name="author" content="Jorge Ramirez Guachalla">
   <meta property="og:title" content="Arq. Jorge Ramirez Guachalla — BIM Manager & Developer">
   <meta property="og:description" content="Arquitecto & Desarrollador BIM especializado en automatización con Revit API, Python y C#.">
@@ -15,17 +15,16 @@
 </head>
 <body>
 
-  <!-- Background Orbs -->
-  <div class="hero-bg">
-    <div class="orb"></div>
-    <div class="orb"></div>
-    <div class="orb"></div>
-  </div>
+  <!-- Scroll Progress -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Particle Background -->
+  <canvas id="particleCanvas"></canvas>
 
   <!-- Navbar -->
   <nav class="navbar" id="navbar">
     <div class="container">
-      <a href="#" class="navbar-brand">JR<span>.</span></a>
+      <a href="#" class="navbar-brand">JR<span>G</span></a>
       <div class="nav-links" id="navLinks">
         <a href="#about">Sobre Mí</a>
         <a href="#experience">Experiencia</a>
@@ -46,7 +45,7 @@
         <div class="hero-text">
           <h1 id="heroName"></h1>
           <p class="subtitle" id="heroTitle"></p>
-          <p class="tagline" id="heroTagline">// automatizando el futuro de la construcción</p>
+          <p class="tagline"><span id="typingText"></span><span class="cursor"></span></p>
           <div class="hero-buttons" id="heroButtons"></div>
         </div>
         <div class="hero-photo">
@@ -62,8 +61,9 @@
     <div class="container reveal">
       <h2 class="section-title"><span class="icon">👤</span> Sobre Mí</h2>
       <div class="card">
-        <p id="aboutSummary" style="font-size:1.05rem;line-height:1.8;color:var(--text-secondary);margin-bottom:20px;"></p>
-        <ul id="aboutHighlights" style="display:grid;gap:8px;"></ul>
+        <div class="card-glow"></div>
+        <p id="aboutSummary" style="font-size:1.05rem;line-height:1.9;color:var(--text-secondary);margin-bottom:24px;"></p>
+        <ul id="aboutHighlights" style="display:grid;gap:10px;"></ul>
       </div>
     </div>
   </section>
@@ -128,10 +128,11 @@
   <footer class="footer">
     <div class="container">
       <div class="footer-links" id="footerLinks"></div>
-      <p>© <span id="year"></span> Jorge Ramirez Guachalla. Diseñado con ☕ y código.</p>
+      <p>© <span id="year"></span> Jorge Ramirez Guachalla · Hecho con ☕ y código</p>
     </div>
   </footer>
 
+  <script src="js/particles.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
