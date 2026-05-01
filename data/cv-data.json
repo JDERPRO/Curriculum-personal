@@ -1,0 +1,370 @@
+{
+  "personal": {
+    "name": "Arq. Jorge Ramirez Guachalla",
+    "title": "BIM Manager & Developer",
+    "subtitle": "Automatización Revit API · Python · C#",
+    "email": "jorgejder3@gmail.com",
+    "phone": "(591) 67187306",
+    "location": "Santa Cruz de la Sierra, Bolivia",
+    "university": "UMSA",
+    "profession": "Arquitecto",
+    "linkedin": "https://www.linkedin.com/in/jorge-ramirez-guachalla-b55117182",
+    "github": "https://github.com/JDERPRO",
+    "youtube": "https://www.youtube.com/@BItforM-r7j",
+    "website": "https://bit-form-page.vercel.app/",
+    "blog": "https://script.google.com/macros/s/AKfycbwcWRdoU-NFJDZv-vJFsM3oJ-HW_N0QBxWPrZsHT499/dev",
+    "photo": "assets/profile.webp"
+  },
+  "about": {
+    "summary": "Arquitecto & Desarrollador BIM con +6 años de experiencia transformando procesos de construcción mediante automatización. Especialista en optimizar flujos de trabajo con Python, C# y Dynamo, reduciendo tiempos hasta un 40% en cuantificaciones y gestión de proyectos. Experto en dirección de obra y licitaciones públicas (SICOES/UPRE).",
+    "highlights": [
+      "Desarrollo de plugins Revit API con C# para automatización BIM",
+      "Creador de Bitform — plataforma de automatización BIM",
+      "Canal educativo 'User Revit Promedio' en YouTube",
+      "Suite de Productividad BIM 2026 en desarrollo"
+    ],
+    "stats": [
+      { "value": "+6", "label": "Años de Experiencia" },
+      { "value": "+50h", "label": "Ahorro Mensual" },
+      { "value": "+5", "label": "Plugins Desarrollados" },
+      { "value": "100/100", "label": "Defensa de Tesis" }
+    ]
+  },
+  "experience": [
+    {
+      "period": "Jul 2024 — Presente",
+      "role": "BIM Manager",
+      "company": "Carmon — Inversiones Inmobiliarias",
+      "location": "Bolivia · Remoto",
+      "type": "Profesional independiente",
+      "description": "Gestión integral de procesos BIM para proyectos de inversión inmobiliaria. Implementación de automatizaciones con Revit API y desarrollo de herramientas personalizadas para optimización de flujos de trabajo.",
+      "achievements": [
+        "Automatización de procesos BIM con Revit API (C# y Python)",
+        "Optimización de modelado e información de proyectos",
+        "Desarrollo de plugins personalizados para productividad",
+        "Implementación de estándares BIM corporativos"
+      ],
+      "tags": ["Revit API", "C#", "Python", "BIM Management", "Dynamo"]
+    },
+    {
+      "period": "Oct 2023 — Jun 2024",
+      "role": "Coordinador BIM",
+      "company": "Penoco SRL",
+      "location": "Bolivia · Presencial",
+      "type": "Jornada completa",
+      "description": "Automatización y optimización de procesos en modelado e información, cálculos métricos BIM y elaboración de presupuestos.",
+      "achievements": [
+        "Coordinación de proyectos de construcción: Mercado Popular Estación Charagua, U.E. 21 de Abril Fe y Alegría",
+        "Fabricación y montaje de diluidores de asfalto y termotanques",
+        "Armado de propuestas para el Sistema de Licitaciones SICOES",
+        "Cuantificaciones BIM con Revit y análisis de precios unitarios"
+      ],
+      "tags": ["Revit", "Dynamo", "SICOES", "Presupuestos BIM", "Coordinación"]
+    },
+    {
+      "period": "Mar 2019 — Jul 2024",
+      "role": "Arquitecto — Gestión de Proyectos",
+      "company": "Penoco SRL",
+      "location": "Santa Cruz, Bolivia",
+      "type": "Profesional independiente",
+      "description": "Gestión integral de proyectos de construcción, desde el diseño de anteproyectos hasta la residencia de obra, con enfoque en licitaciones públicas y proyectos UPRE.",
+      "achievements": [
+        "Residente de obra: Construcción de laboratorios BTH — Módulo Educativo Godofredo Trenker (San Rafael de Velasco)",
+        "Diseño de planos de detalle para fabricación de piezas metálicas",
+        "Armado de planillas para presentación en UPRE",
+        "Diseño de anteproyectos para licitaciones en SICOES"
+      ],
+      "tags": ["Gestión de Proyectos", "Residencia de Obra", "AutoCAD", "Licitaciones"]
+    },
+    {
+      "period": "2018",
+      "role": "Técnico Obras Públicas — Trabajo Dirigido",
+      "company": "Alcaldía San Rafael de Velasco",
+      "location": "Santa Cruz, Bolivia",
+      "type": "Trabajo dirigido",
+      "description": "Diseño de anteproyectos de arquitectura con información recavada según requerimientos del municipio. Elaboración del POUT (Plan de Ordenamiento Urbano Territorial).",
+      "achievements": [
+        "Diseño de anteproyectos: Terminal San Rafael de Velasco, Plaza Urbana Betania, Cafetería Horneau Camba",
+        "Elaboración del POUT con relevamiento diagnóstico y propuesta a nivel urbano y catastral",
+        "Colaboración en proyectos UPRE: planillas de avance y cierres de proyectos"
+      ],
+      "tags": ["Diseño Arquitectónico", "Urbanismo", "POUT", "UPRE"]
+    }
+  ],
+  "education": [
+    {
+      "period": "2025 — En curso",
+      "degree": "Maestría en BIM Manager",
+      "institution": "En curso",
+      "location": "Bolivia",
+      "note": "Actualmente cursando",
+      "icon": "🎓",
+      "highlight": true
+    },
+    {
+      "period": "2013 — 2018",
+      "degree": "Licenciatura en Arquitectura",
+      "institution": "Universidad Mayor de San Andrés (UMSA)",
+      "location": "La Paz, Bolivia",
+      "note": "Defensa de Trabajo Dirigido: 100/100 · Récord académico: 70 pts",
+      "icon": "🏛️",
+      "highlight": false
+    },
+    {
+      "period": "2000 — 2013",
+      "degree": "Estudios Primarios y Secundarios",
+      "institution": "Colegio Boliviano Alemán Ave María",
+      "location": "La Paz, Bolivia",
+      "note": "",
+      "icon": "📚",
+      "highlight": false
+    }
+  ],
+  "certifications": [
+    {
+      "name": "Programación BIM — Revit API C#",
+      "issuer": "Proisac — Prometheus Ingenieros SAC",
+      "date": "Sept 2024",
+      "tier": 1,
+      "icon": "🔷",
+      "skills": ["C#", "Revit API", "Programación"]
+    },
+    {
+      "name": "Revit y Power BI: Análisis de datos",
+      "issuer": "LinkedIn Learning",
+      "date": "Mar 2025",
+      "tier": 1,
+      "icon": "📊",
+      "skills": ["Power BI", "Revit", "Análisis de Datos"]
+    },
+    {
+      "name": "Especialización en Dynamo Python",
+      "issuer": "Especialista3D",
+      "date": "Ene 2024",
+      "tier": 1,
+      "icon": "🐍",
+      "skills": ["Dynamo", "Python", "Revit"],
+      "credentialId": "94592296",
+      "validUntil": "Dic 2034"
+    },
+    {
+      "name": "Programming Essentials in Python",
+      "issuer": "Cisco Networking Academy",
+      "date": "Ago 2022",
+      "tier": 1,
+      "icon": "🐍",
+      "skills": ["Python"]
+    },
+    {
+      "name": "Introduction to Cybersecurity",
+      "issuer": "Cisco",
+      "date": "Abr 2022",
+      "tier": 2,
+      "icon": "🔒",
+      "skills": ["Cybersecurity"]
+    },
+    {
+      "name": "Especialización en SQL",
+      "issuer": "UPAL",
+      "date": "Jun 2023",
+      "tier": 2,
+      "icon": "🗄️",
+      "skills": ["SQL", "Microsoft SQL Server"],
+      "credentialId": "fa782c41"
+    },
+    {
+      "name": "Especialización en Excel",
+      "issuer": "UPAL",
+      "date": "Jun 2023",
+      "tier": 2,
+      "icon": "📗",
+      "skills": ["Excel"],
+      "credentialId": "56e2f62d"
+    },
+    {
+      "name": "Especialización en Office",
+      "issuer": "UPAL",
+      "date": "Ago 2023",
+      "tier": 2,
+      "icon": "💼",
+      "skills": ["Office"],
+      "credentialId": "23B4CBBF"
+    },
+    {
+      "name": "Photoshop e Illustrator",
+      "issuer": "UPAL",
+      "date": "2023",
+      "tier": 2,
+      "icon": "🎨",
+      "skills": ["Photoshop", "Illustrator"],
+      "credentialId": "53910ea3"
+    },
+    {
+      "name": "PRESCOM-SECON",
+      "issuer": "ADESIC",
+      "date": "Oct 2022",
+      "tier": 2,
+      "icon": "📋",
+      "skills": ["Presupuestos", "Planificación"]
+    },
+    {
+      "name": "Cálculo de Instalaciones Sanitarias en Edificaciones",
+      "issuer": "S.I.B. La Paz",
+      "date": "Jun 2022",
+      "tier": 2,
+      "icon": "🔧",
+      "skills": ["Instalaciones Sanitarias"]
+    },
+    {
+      "name": "Excel Avanzado",
+      "issuer": "Netzun",
+      "date": "Oct 2022",
+      "tier": 3,
+      "icon": "📗",
+      "skills": ["Excel"]
+    },
+    {
+      "name": "Comunicación Asertiva",
+      "issuer": "Netzun",
+      "date": "Dic 2022",
+      "tier": 3,
+      "icon": "💬",
+      "skills": ["Soft Skills"],
+      "credentialId": "C29566F"
+    },
+    {
+      "name": "Llenado de Propuestas — Subastas Electrónicas SICOES",
+      "issuer": "NEMABOL",
+      "date": "Ago 2021",
+      "tier": 3,
+      "icon": "📄",
+      "skills": ["Licitaciones", "SICOES"]
+    },
+    {
+      "name": "Formularios SICOES Proponentes",
+      "issuer": "NEMABOL",
+      "date": "Ago 2021",
+      "tier": 3,
+      "icon": "📄",
+      "skills": ["Licitaciones", "SICOES"]
+    },
+    {
+      "name": "D.S. Nº 0181 — Sistema de Administración de Bienes y Servicios (SABS)",
+      "issuer": "NEMABOL",
+      "date": "Ago 2021",
+      "tier": 3,
+      "icon": "📄",
+      "skills": ["Normativa", "SABS"]
+    }
+  ],
+  "skills": {
+    "categories": [
+      {
+        "name": "BIM & Diseño",
+        "icon": "🏗️",
+        "items": [
+          { "name": "Revit", "level": 95 },
+          { "name": "AutoCAD", "level": 90 },
+          { "name": "Enscape", "level": 80 },
+          { "name": "Twinmotion", "level": 75 },
+          { "name": "Lumion", "level": 75 }
+        ]
+      },
+      {
+        "name": "Programación",
+        "icon": "💻",
+        "items": [
+          { "name": "C# (Revit API)", "level": 80 },
+          { "name": "Python", "level": 75 },
+          { "name": "Dynamo", "level": 85 },
+          { "name": "SQL", "level": 50 },
+          { "name": "JavaScript", "level": 60 }
+        ]
+      },
+      {
+        "name": "Datos & Análisis",
+        "icon": "📊",
+        "items": [
+          { "name": "Excel / VBA", "level": 90 },
+          { "name": "Power BI", "level": 70 },
+          { "name": "PRESCOM", "level": 85 }
+        ]
+      },
+      {
+        "name": "Gestión",
+        "icon": "📐",
+        "items": [
+          { "name": "Presupuestos BIM", "level": 90 },
+          { "name": "Licitaciones SICOES", "level": 85 },
+          { "name": "MS Project", "level": 75 },
+          { "name": "Gestión de Proyectos", "level": 85 }
+        ]
+      }
+    ]
+  },
+  "projects": [
+    {
+      "name": "Bitform",
+      "description": "Plataforma de automatización BIM. Plugins que reducen el tiempo de modelado en un 40%. Gestión de parámetros y auditoría de modelos con un solo clic.",
+      "url": "https://bit-form-page.vercel.app/",
+      "tags": ["Next.js", "Revit API", "C#", "Supabase"],
+      "icon": "⚡"
+    },
+    {
+      "name": "User Revit Promedio",
+      "description": "Canal educativo en YouTube para usuarios de Revit — desde principiantes hasta avanzados. Compartiendo conocimiento sobre estandarización y mejores prácticas BIM.",
+      "url": "https://www.youtube.com/@BItforM-r7j",
+      "tags": ["YouTube", "Educación", "BIM", "Revit"],
+      "icon": "🎥"
+    },
+    {
+      "name": "Suite de Productividad 2026",
+      "description": "Suite de plugins Revit en desarrollo activo. Herramientas de automatización para arquitectos e ingenieros.",
+      "url": "#",
+      "tags": ["C#", "Revit API", "WPF", "En desarrollo"],
+      "icon": "🚀"
+    },
+    {
+      "name": "Blog Técnico",
+      "description": "Artículos regulares sobre automatización BIM, programación en Revit y mejores prácticas para profesionales AEC.",
+      "url": "https://script.google.com/macros/s/AKfycbwcWRdoU-NFJDZv-vJFsM3oJ-HW_N0QBxWPrZsHT499/dev",
+      "tags": ["Blog", "BIM", "Automatización"],
+      "icon": "📝"
+    }
+  ],
+  "awards": [
+    {
+      "title": "1er Lugar — Concurso de Diseño",
+      "issuer": "Facultad de Arquitectura, Artes y Urbanismo — UMSA",
+      "icon": "🏆"
+    },
+    {
+      "title": "Certificación del Gobierno Autónomo Municipal",
+      "issuer": "San Rafael De Velasco",
+      "icon": "📜"
+    },
+    {
+      "title": "Carta de Reconocimiento del Director",
+      "issuer": "Facultad de Arquitectura, Artes y Urbanismo — UMSA",
+      "icon": "📋"
+    },
+    {
+      "title": "Entrevista en YouTube — Dynamo Python",
+      "issuer": "Especialista3D",
+      "url": "https://www.youtube.com/watch?v=f0bTEfkAA3E",
+      "icon": "🎥"
+    }
+  ],
+  "languages": [
+    { "name": "Español", "level": "Nativo" },
+    { "name": "Inglés", "level": "Básico" }
+  ],
+  "seminars": [
+    "Bienal de Arquitectura Sudamericana 2017 — La Paz, Bolivia",
+    "Curso de Control y Prevención de Riesgos",
+    "Curso de Gestión del Patrimonio Arquitectónico",
+    "Seminario de Ecología y Medio Ambiente",
+    "Curso de Topografía",
+    "Curso de Color y la aplicación en la Arquitectura"
+  ]
+}

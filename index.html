@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arq. Jorge Ramirez Guachalla — BIM Manager & Developer</title>
+  <meta name="description" content="CV Profesional de Jorge Ramirez Guachalla. Arquitecto y Desarrollador BIM con +6 años de experiencia en automatización Revit API, Python y C#.">
+  <meta name="keywords" content="BIM Manager, Arquitecto, Revit API, C#, Python, Dynamo, Automatización BIM">
+  <meta name="author" content="Jorge Ramirez Guachalla">
+  <meta property="og:title" content="Arq. Jorge Ramirez Guachalla — BIM Manager & Developer">
+  <meta property="og:description" content="Arquitecto & Desarrollador BIM especializado en automatización con Revit API, Python y C#.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏗️</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Background Orbs -->
+  <div class="hero-bg">
+    <div class="orb"></div>
+    <div class="orb"></div>
+    <div class="orb"></div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="#" class="navbar-brand">JR<span>.</span></a>
+      <div class="nav-links" id="navLinks">
+        <a href="#about">Sobre Mí</a>
+        <a href="#experience">Experiencia</a>
+        <a href="#education">Educación</a>
+        <a href="#certifications">Certificaciones</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Proyectos</a>
+        <a href="#contact">Contacto</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Menú">☰</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero" id="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1 id="heroName"></h1>
+          <p class="subtitle" id="heroTitle"></p>
+          <p class="tagline" id="heroTagline">// automatizando el futuro de la construcción</p>
+          <div class="hero-buttons" id="heroButtons"></div>
+        </div>
+        <div class="hero-photo">
+          <img id="heroPhoto" src="" alt="Jorge Ramirez Guachalla" loading="eager">
+        </div>
+      </div>
+      <div class="stats-bar" id="statsBar"></div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="section" id="about">
+    <div class="container reveal">
+      <h2 class="section-title"><span class="icon">👤</span> Sobre Mí</h2>
+      <div class="card">
+        <p id="aboutSummary" style="font-size:1.05rem;line-height:1.8;color:var(--text-secondary);margin-bottom:20px;"></p>
+        <ul id="aboutHighlights" style="display:grid;gap:8px;"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience -->
+  <section class="section" id="experience">
+    <div class="container reveal">
+      <h2 class="section-title"><span class="icon">💼</span> Experiencia Profesional</h2>
+      <div class="timeline" id="timeline"></div>
+    </div>
+  </section>
+
+  <!-- Education -->
+  <section class="section" id="education">
+    <div class="container reveal">
+      <h2 class="section-title"><span class="icon">🎓</span> Educación</h2>
+      <div class="education-grid" id="educationGrid"></div>
+    </div>
+  </section>
+
+  <!-- Certifications -->
+  <section class="section" id="certifications">
+    <div class="container reveal">
+      <h2 class="section-title"><span class="icon">📜</span> Certificaciones</h2>
+      <div id="certificationsContainer"></div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section class="section" id="skills">
+    <div class="container reveal">
+      <h2 class="section-title"><span class="icon">🛠️</span> Habilidades Técnicas</h2>
+      <div class="skills-grid" id="skillsGrid"></div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section class="section" id="projects">
+    <div class="container reveal">
+      <h2 class="section-title"><span class="icon">🚀</span> Proyectos & Productos</h2>
+      <div class="projects-grid" id="projectsGrid"></div>
+    </div>
+  </section>
+
+  <!-- Awards -->
+  <section class="section" id="awards">
+    <div class="container reveal">
+      <h2 class="section-title"><span class="icon">🏆</span> Reconocimientos & Media</h2>
+      <div class="awards-grid" id="awardsGrid"></div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="section" id="contact">
+    <div class="container reveal">
+      <h2 class="section-title"><span class="icon">📬</span> Contacto</h2>
+      <div class="contact-grid" id="contactGrid"></div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-links" id="footerLinks"></div>
+      <p>© <span id="year"></span> Jorge Ramirez Guachalla. Diseñado con ☕ y código.</p>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
