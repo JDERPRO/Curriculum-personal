@@ -295,7 +295,8 @@
         ${p.email}<br>${p.phone}<br>${p.location}<br>
         <a href="${p.linkedin}" style="color:#0077b5;">LinkedIn</a> · 
         <a href="${p.github}" style="color:#333;">GitHub</a> ·
-        <a href="${p.website}" style="color:#f0c040;">Bitform</a>
+        <a href="${p.website}" style="color:#f0c040;">Bitform</a><br>
+        <a href="https://jderpro.github.io/Curriculum-personal/" style="color:#3b82f6;font-weight:600;">jderpro.github.io/Curriculum-personal</a>
       </div>
     </div>
 
@@ -440,6 +441,107 @@
     sections.forEach(s => observer.observe(s));
   }
 
+  /* ============ LANGUAGES ============ */
+  function renderLanguages() {
+    if (!DATA.languages) return;
+    $('#languagesGrid').innerHTML = DATA.languages.map(l => `
+      <div class="card lang-card reveal">
+        <div class="card-glow"></div>
+        <span style="font-weight:600;">${l.name}</span>
+        <span class="lang-level">${l.level}</span>
+      </div>
+    `).join('');
+  }
+
+  /* ============ SEMINARS ============ */
+  function renderSeminars() {
+    if (!DATA.seminars) return;
+    $('#seminarsList').innerHTML = DATA.seminars.map(s => `
+      <div class="seminar-item">${s}</div>
+    `).join('');
+  }
+
+  /* ============ SECTION NUMBERS ============ */
+  function addSectionNumbers() {
+    const sectionIds = ['about', 'experience', 'education', 'certifications', 'skills', 'projects', 'awards', 'contact'];
+    sectionIds.forEach((id, i) => {
+      const title = document.querySelector(`#${id} .section-title`);
+      if (title) {
+        const num = document.createElement('div');
+        num.className = 'section-number';
+        num.textContent = `0${i + 1}`;
+        title.parentElement.insertBefore(num, title);
+      }
+    });
+  }
+
+  /* ============ BACK TO TOP ============ */
+  function initBackToTop() {
+    const btn = $('#backToTop');
+    window.addEventListener('scroll', () => {
+      btn.classList.toggle('visible', window.scrollY > 500);
+    });
+    btn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  /* ============ CUSTOM CURSOR ============ */
+  function initCustomCursor() {
+    if (window.innerWidth < 900) return;
+    const dot = $('#cursorDot');
+    const ring = $('#cursorRing');
+    let mx = 0, my = 0, dx = 0, dy = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      mx = e.clientX; my = e.clientY;
+      dot.style.left = mx + 'px';
+      dot.style.top = my + 'px';
+      dot.classList.add('active');
+      ring.classList.add('active');
+    });
+
+    function animateRing() {
+      dx += (mx - dx) * 0.12;
+      dy += (my - dy) * 0.12;
+      ring.style.left = dx + 'px';
+      ring.style.top = dy + 'px';
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    $$('a, button, .card, .btn').forEach(el => {
+      el.addEventListener('mouseenter', () => ring.classList.add('hover'));
+      el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
+    });
+  }
+
+  /* ============ ANIMATED COUNTERS ============ */
+  function initCounters() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.stat-value').forEach(el => {
+            const text = el.textContent;
+            const match = text.match(/(\+?)(\d+)(.*)/);
+            if (!match) return;
+            const prefix = match[1], target = parseInt(match[2]), suffix = match[3];
+            let current = 0;
+            const step = Math.max(1, Math.floor(target / 40));
+            const timer = setInterval(() => {
+              current += step;
+              if (current >= target) { current = target; clearInterval(timer); }
+              el.textContent = prefix + current + suffix;
+            }, 30);
+          });
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    const bar = $('#statsBar');
+    if (bar) observer.observe(bar);
+  }
+
   /* ============ RENDER ALL ============ */
   renderHero();
   renderStats();
@@ -451,7 +553,10 @@
   renderProjects();
   renderAwards();
   renderContact();
+  renderLanguages();
+  renderSeminars();
   renderFooter();
+  addSectionNumbers();
 
   requestAnimationFrame(() => {
     initTyping();
@@ -460,6 +565,9 @@
     initScrollProgress();
     initNav();
     initActiveNav();
+    initBackToTop();
+    initCustomCursor();
+    initCounters();
   });
 
 })();
