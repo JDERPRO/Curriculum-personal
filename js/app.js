@@ -1,6 +1,6 @@
 /* ========================================
    CV Professional — PRO Rendering Engine
-   v2.0 with effects
+   v3.0 – Clean, no-emoji, PDF export
    ======================================== */
 (async function () {
   'use strict';
@@ -30,10 +30,13 @@
     };
 
     $('#heroButtons').innerHTML = `
-      <a href="#contact" class="btn btn-primary"><span>📬 Contactar</span></a>
-      <a href="${p.linkedin}" target="_blank" class="btn btn-outline">in LinkedIn</a>
-      <a href="${p.github}" target="_blank" class="btn btn-outline">⟨/⟩ GitHub</a>
-      <a href="${p.website}" target="_blank" class="btn btn-outline">⚡ Bitform</a>
+      <a href="#contact" class="btn btn-primary"><span>Contactar</span></a>
+      <a href="${p.linkedin}" target="_blank" class="btn btn-outline">LinkedIn</a>
+      <a href="${p.github}" target="_blank" class="btn btn-outline">GitHub</a>
+      <a href="${p.website}" target="_blank" class="btn btn-outline">
+        <img src="Logo_BitForm3.png" alt="Bitform" style="height:18px;width:auto;display:inline-block;vertical-align:middle;margin-right:4px;filter:brightness(1.2);">Bitform
+      </a>
+      <button class="btn btn-outline" id="downloadPdfBtn" onclick="generatePDF()">Descargar CV</button>
     `;
   }
 
@@ -47,38 +50,28 @@
     ];
     const el = $('#typingText');
     let phraseIdx = 0, charIdx = 0, deleting = false;
-
     function type() {
       const current = phrases[phraseIdx];
       if (!deleting) {
         el.textContent = current.substring(0, charIdx + 1);
         charIdx++;
-        if (charIdx === current.length) {
-          setTimeout(() => { deleting = true; type(); }, 2200);
-          return;
-        }
+        if (charIdx === current.length) { setTimeout(() => { deleting = true; type(); }, 2200); return; }
         setTimeout(type, 50 + Math.random() * 30);
       } else {
         el.textContent = current.substring(0, charIdx - 1);
         charIdx--;
-        if (charIdx === 0) {
-          deleting = false;
-          phraseIdx = (phraseIdx + 1) % phrases.length;
-          setTimeout(type, 400);
-          return;
-        }
+        if (charIdx === 0) { deleting = false; phraseIdx = (phraseIdx + 1) % phrases.length; setTimeout(type, 400); return; }
         setTimeout(type, 25);
       }
     }
     type();
   }
 
-  /* ============ STATS with counter animation ============ */
+  /* ============ STATS ============ */
   function renderStats() {
-    const bar = $('#statsBar');
-    bar.innerHTML = DATA.about.stats.map((s, i) => `
+    $('#statsBar').innerHTML = DATA.about.stats.map((s, i) => `
       <div class="stat-item reveal reveal-delay-${i % 4}">
-        <span class="stat-value" data-target="${s.value}">${s.value}</span>
+        <span class="stat-value">${s.value}</span>
         <span class="stat-label">${s.label}</span>
       </div>
     `).join('');
@@ -88,7 +81,7 @@
   function renderAbout() {
     $('#aboutSummary').textContent = DATA.about.summary;
     $('#aboutHighlights').innerHTML = DATA.about.highlights.map(h => `
-      <li style="padding-left:22px;position:relative;color:var(--text-secondary);font-size:0.9rem;transition:var(--transition);">
+      <li style="padding-left:22px;position:relative;color:var(--text-secondary);font-size:0.9rem;">
         <span style="position:absolute;left:0;color:var(--accent);font-weight:bold;">▹</span>${h}
       </li>
     `).join('');
@@ -114,10 +107,11 @@
 
   /* ============ EDUCATION ============ */
   function renderEducation() {
+    const icons = { 'true': '◈', 'false': '◇' };
     $('#educationGrid').innerHTML = DATA.education.map(edu => `
       <div class="card edu-card ${edu.highlight ? 'highlight' : ''} reveal">
         <div class="card-glow"></div>
-        <div class="edu-icon"><span>${edu.icon}</span></div>
+        <div class="edu-icon"><span style="font-size:1.4rem;${edu.highlight ? 'filter:none;' : ''}">${edu.highlight ? '◈' : '◇'}</span></div>
         <div>
           <div class="edu-degree">${edu.degree}${edu.highlight ? '<span class="badge-progress">EN CURSO</span>' : ''}</div>
           <div class="edu-institution">${edu.institution}</div>
@@ -144,7 +138,7 @@
           ${certs.map(c => `
             <div class="card cert-card reveal">
               <div class="card-glow"></div>
-              <div class="cert-icon">${c.icon}</div>
+              <div class="cert-icon" style="font-size:1rem;color:var(--accent);font-weight:bold;">◆</div>
               <div>
                 <div class="cert-name">${c.name}</div>
                 <div class="cert-issuer">${c.issuer}</div>
@@ -160,10 +154,11 @@
 
   /* ============ SKILLS ============ */
   function renderSkills() {
-    $('#skillsGrid').innerHTML = DATA.skills.categories.map(cat => `
+    const catIcons = ['◈', '◇', '◆', '◉'];
+    $('#skillsGrid').innerHTML = DATA.skills.categories.map((cat, i) => `
       <div class="card skill-category reveal">
         <div class="card-glow"></div>
-        <h3>${cat.icon} ${cat.name}</h3>
+        <h3><span style="color:var(--accent)">${catIcons[i]}</span> ${cat.name}</h3>
         ${cat.items.map(skill => `
           <div class="skill-item">
             <div class="skill-header">
@@ -181,24 +176,26 @@
 
   /* ============ PROJECTS ============ */
   function renderProjects() {
-    $('#projectsGrid').innerHTML = DATA.projects.map(proj => `
+    const projIcons = ['<img src="Logo_BitForm3.png" alt="Bitform" style="height:36px;width:auto;">', '▶', '◈', '≡'];
+    $('#projectsGrid').innerHTML = DATA.projects.map((proj, i) => `
       <div class="card project-card reveal">
         <div class="card-glow"></div>
-        <div class="project-icon">${proj.icon}</div>
+        <div class="project-icon">${projIcons[i] || '◆'}</div>
         <h3>${proj.name}</h3>
         <p>${proj.description}</p>
         <div class="timeline-tags" style="margin-bottom:14px;">${proj.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
-        ${proj.url !== '#' ? `<a href="${proj.url}" target="_blank" class="project-link">Ver proyecto →</a>` : '<span style="color:var(--text-muted);font-size:0.82rem;">🔜 Próximamente</span>'}
+        ${proj.url !== '#' ? `<a href="${proj.url}" target="_blank" class="project-link">Ver proyecto →</a>` : '<span style="color:var(--text-muted);font-size:0.82rem;">Próximamente</span>'}
       </div>
     `).join('');
   }
 
   /* ============ AWARDS ============ */
   function renderAwards() {
-    $('#awardsGrid').innerHTML = DATA.awards.map(aw => `
+    const awardIcons = ['★', '✦', '◈', '▶'];
+    $('#awardsGrid').innerHTML = DATA.awards.map((aw, i) => `
       <div class="card award-card reveal">
         <div class="card-glow"></div>
-        <div class="award-icon">${aw.icon}</div>
+        <div class="award-icon" style="color:var(--accent);font-size:1.4rem;">${awardIcons[i]}</div>
         <div>
           <div class="award-title">${aw.title}</div>
           <div class="award-issuer">${aw.issuer}</div>
@@ -212,17 +209,17 @@
   function renderContact() {
     const p = DATA.personal;
     const items = [
-      { icon: '📧', label: 'Email', value: p.email, href: `mailto:${p.email}` },
-      { icon: '📱', label: 'Teléfono', value: p.phone, href: `tel:${p.phone.replace(/[^+\d]/g, '')}` },
-      { icon: '📍', label: 'Ubicación', value: p.location },
-      { icon: '💼', label: 'LinkedIn', value: 'Ver perfil', href: p.linkedin },
+      { icon: '✉', label: 'Email', value: p.email, href: `mailto:${p.email}` },
+      { icon: '☎', label: 'Teléfono', value: p.phone, href: `tel:${p.phone.replace(/[^+\d]/g, '')}` },
+      { icon: '⌖', label: 'Ubicación', value: p.location },
+      { icon: 'in', label: 'LinkedIn', value: 'Ver perfil', href: p.linkedin },
       { icon: '⟨/⟩', label: 'GitHub', value: 'Ver repos', href: p.github },
-      { icon: '🎥', label: 'YouTube', value: 'Ver canal', href: p.youtube }
+      { icon: '▶', label: 'YouTube', value: 'Ver canal', href: p.youtube }
     ];
     $('#contactGrid').innerHTML = items.map(i => `
       <div class="card contact-item reveal">
         <div class="card-glow"></div>
-        <div class="contact-icon">${i.icon}</div>
+        <div class="contact-icon" style="font-family:var(--font-heading);font-weight:700;font-size:1rem;">${i.icon}</div>
         <div>
           <div class="contact-label">${i.label}</div>
           ${i.href ? `<a href="${i.href}" target="_blank" class="contact-value">${i.value}</a>` : `<div class="contact-value">${i.value}</div>`}
@@ -244,13 +241,143 @@
     `;
   }
 
+  /* ============ PDF GENERATION ============ */
+  window.generatePDF = function() {
+    const btn = $('#downloadPdfBtn');
+    btn.textContent = 'Generando...';
+    btn.disabled = true;
+
+    const printWindow = window.open('', '_blank');
+    const d = DATA;
+    const p = d.personal;
+
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>CV - ${p.name}</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+      * { margin:0; padding:0; box-sizing:border-box; }
+      body { font-family:'Inter',sans-serif; color:#1a1a2e; font-size:10.5pt; line-height:1.5; padding:32px 40px; }
+      .header { display:flex; justify-content:space-between; align-items:flex-start; border-bottom:3px solid #f0c040; padding-bottom:16px; margin-bottom:20px; }
+      .header h1 { font-size:22pt; font-weight:700; color:#0a0a1a; margin-bottom:2px; }
+      .header .subtitle { font-size:11pt; color:#555; }
+      .header .contact-info { text-align:right; font-size:9pt; color:#444; line-height:1.7; }
+      h2 { font-size:12pt; font-weight:700; color:#0a0a1a; border-bottom:1.5px solid #e0e0e0; padding-bottom:4px; margin:18px 0 10px; text-transform:uppercase; letter-spacing:1.5px; }
+      .exp-item { margin-bottom:14px; }
+      .exp-header { display:flex; justify-content:space-between; }
+      .exp-role { font-weight:600; font-size:10.5pt; }
+      .exp-company { color:#555; font-size:9.5pt; }
+      .exp-period { font-size:9pt; color:#888; text-align:right; }
+      .exp-desc { font-size:9.5pt; color:#333; margin-top:3px; }
+      .exp-achievements { margin-top:4px; padding-left:16px; }
+      .exp-achievements li { font-size:9pt; color:#444; margin-bottom:2px; }
+      .two-col { display:grid; grid-template-columns:1fr 1fr; gap:8px 24px; }
+      .cert-item { font-size:9pt; margin-bottom:4px; }
+      .cert-item strong { font-weight:600; }
+      .cert-item span { color:#888; }
+      .skill-group { margin-bottom:10px; }
+      .skill-group h3 { font-size:10pt; font-weight:600; margin-bottom:4px; }
+      .skill-bar-wrap { display:flex; align-items:center; gap:6px; margin-bottom:3px; }
+      .skill-label { font-size:8.5pt; width:110px; }
+      .skill-bar-bg { flex:1; height:5px; background:#eee; border-radius:3px; }
+      .skill-bar-fg { height:100%; background:linear-gradient(90deg,#f0c040,#3b82f6); border-radius:3px; }
+      .skill-pct { font-size:8pt; color:#888; width:30px; text-align:right; }
+      .proj-item { margin-bottom:6px; }
+      .proj-item strong { font-weight:600; font-size:9.5pt; }
+      .proj-item span { font-size:9pt; color:#555; }
+      .badge { display:inline-block; background:#f0c040; color:#0a0a1a; font-size:7.5pt; font-weight:700; padding:1px 6px; border-radius:8px; margin-left:6px; }
+      @media print { body { padding:20px 28px; } @page { margin:0.5cm; } }
+    </style></head><body>
+    <div class="header">
+      <div>
+        <h1>${p.name}</h1>
+        <div class="subtitle">${p.title} | ${p.subtitle}</div>
+      </div>
+      <div class="contact-info">
+        ${p.email}<br>${p.phone}<br>${p.location}<br>
+        <a href="${p.linkedin}" style="color:#0077b5;">LinkedIn</a> · 
+        <a href="${p.github}" style="color:#333;">GitHub</a> ·
+        <a href="${p.website}" style="color:#f0c040;">Bitform</a>
+      </div>
+    </div>
+
+    <h2>Perfil Profesional</h2>
+    <p style="font-size:9.5pt;color:#333;">${d.about.summary}</p>
+
+    <h2>Experiencia Profesional</h2>
+    ${d.experience.map(e => `
+      <div class="exp-item">
+        <div class="exp-header">
+          <div><span class="exp-role">${e.role}</span> <span class="exp-company">— ${e.company}</span></div>
+          <div class="exp-period">${e.period}</div>
+        </div>
+        <div class="exp-desc">${e.location} · ${e.type}</div>
+        ${e.achievements ? `<ul class="exp-achievements">${e.achievements.map(a => `<li>${a}</li>`).join('')}</ul>` : ''}
+      </div>
+    `).join('')}
+
+    <h2>Educación</h2>
+    ${d.education.map(e => `
+      <div class="exp-item">
+        <div class="exp-header">
+          <div><span class="exp-role">${e.degree}</span>${e.highlight ? '<span class="badge">EN CURSO</span>' : ''}</div>
+          <div class="exp-period">${e.period}</div>
+        </div>
+        <div class="exp-desc">${e.institution}${e.note ? ' — ' + e.note : ''}</div>
+      </div>
+    `).join('')}
+
+    <h2>Certificaciones</h2>
+    <div class="two-col">
+      ${d.certifications.filter(c => c.tier <= 2).map(c => `
+        <div class="cert-item"><strong>${c.name}</strong> — ${c.issuer} <span>(${c.date})</span></div>
+      `).join('')}
+    </div>
+
+    <h2>Habilidades Técnicas</h2>
+    <div class="two-col">
+      ${d.skills.categories.map(cat => `
+        <div class="skill-group">
+          <h3>${cat.name}</h3>
+          ${cat.items.map(s => `
+            <div class="skill-bar-wrap">
+              <span class="skill-label">${s.name}</span>
+              <div class="skill-bar-bg"><div class="skill-bar-fg" style="width:${s.level}%"></div></div>
+              <span class="skill-pct">${s.level}%</span>
+            </div>
+          `).join('')}
+        </div>
+      `).join('')}
+    </div>
+
+    <h2>Proyectos</h2>
+    ${d.projects.map(pr => `
+      <div class="proj-item"><strong>${pr.name}</strong> — <span>${pr.description}</span></div>
+    `).join('')}
+
+    <h2>Reconocimientos</h2>
+    ${d.awards.map(a => `
+      <div class="proj-item"><strong>${a.title}</strong> — <span>${a.issuer}</span></div>
+    `).join('')}
+
+    <script>
+      window.onload = () => { setTimeout(() => { window.print(); }, 500); };
+    <\/script>
+    </body></html>`;
+
+    printWindow.document.write(html);
+    printWindow.document.close();
+
+    setTimeout(() => {
+      btn.textContent = 'Descargar CV';
+      btn.disabled = false;
+    }, 2000);
+  };
+
   /* ============ SCROLL REVEAL ============ */
   function initScrollReveal() {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
-          // Animate skill bars
           entry.target.querySelectorAll('.skill-bar-fill').forEach(bar => {
             setTimeout(() => {
               bar.style.width = bar.dataset.level + '%';
@@ -263,7 +390,7 @@
     $$('.reveal').forEach(el => observer.observe(el));
   }
 
-  /* ============ 3D TILT + GLOW FOLLOW ============ */
+  /* ============ 3D TILT + GLOW ============ */
   function initCardTilt() {
     $$('.card').forEach(card => {
       const glow = card.querySelector('.card-glow');
@@ -273,27 +400,18 @@
         const y = e.clientY - rect.top;
         const cx = rect.width / 2;
         const cy = rect.height / 2;
-        const rotateX = (y - cy) / cy * -4;
-        const rotateY = (x - cx) / cx * 4;
-        card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-3px)`;
-        if (glow) {
-          glow.style.left = x + 'px';
-          glow.style.top = y + 'px';
-        }
+        card.style.transform = `perspective(800px) rotateX(${(y - cy) / cy * -4}deg) rotateY(${(x - cx) / cx * 4}deg) translateY(-3px)`;
+        if (glow) { glow.style.left = x + 'px'; glow.style.top = y + 'px'; }
       });
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = '';
-      });
+      card.addEventListener('mouseleave', () => { card.style.transform = ''; });
     });
   }
 
-  /* ============ SCROLL PROGRESS BAR ============ */
+  /* ============ SCROLL PROGRESS ============ */
   function initScrollProgress() {
-    const bar = $('#scrollProgress');
     window.addEventListener('scroll', () => {
       const h = document.documentElement.scrollHeight - window.innerHeight;
-      const pct = (window.scrollY / h) * 100;
-      bar.style.width = pct + '%';
+      $('#scrollProgress').style.width = (window.scrollY / h * 100) + '%';
     });
   }
 
@@ -303,23 +421,19 @@
     const links = $('#navLinks');
     toggle.addEventListener('click', () => links.classList.toggle('active'));
     links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => links.classList.remove('active')));
-
     window.addEventListener('scroll', () => {
       $('#navbar').classList.toggle('scrolled', window.scrollY > 80);
     });
   }
 
-  /* ============ ACTIVE NAV HIGHLIGHT ============ */
+  /* ============ ACTIVE NAV ============ */
   function initActiveNav() {
     const sections = $$('.section, .hero');
     const navLinks = $$('.nav-links a');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          const id = entry.target.id;
-          navLinks.forEach(link => {
-            link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
-          });
+          navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`));
         }
       });
     }, { threshold: 0.3 });
