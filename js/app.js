@@ -486,36 +486,6 @@
     });
   }
 
-  /* ============ CUSTOM CURSOR ============ */
-  function initCustomCursor() {
-    if (window.innerWidth < 900) return;
-    const dot = $('#cursorDot');
-    const ring = $('#cursorRing');
-    let mx = 0, my = 0, dx = 0, dy = 0;
-
-    document.addEventListener('mousemove', (e) => {
-      mx = e.clientX; my = e.clientY;
-      dot.style.left = mx + 'px';
-      dot.style.top = my + 'px';
-      dot.classList.add('active');
-      ring.classList.add('active');
-    });
-
-    function animateRing() {
-      dx += (mx - dx) * 0.12;
-      dy += (my - dy) * 0.12;
-      ring.style.left = dx + 'px';
-      ring.style.top = dy + 'px';
-      requestAnimationFrame(animateRing);
-    }
-    animateRing();
-
-    $$('a, button, .card, .btn').forEach(el => {
-      el.addEventListener('mouseenter', () => ring.classList.add('hover'));
-      el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
-    });
-  }
-
   /* ============ ANIMATED COUNTERS ============ */
   function initCounters() {
     const observer = new IntersectionObserver((entries) => {
@@ -566,7 +536,6 @@
     initNav();
     initActiveNav();
     initBackToTop();
-    initCustomCursor();
     initCounters();
   });
 
