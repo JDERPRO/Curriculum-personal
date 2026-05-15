@@ -1,8 +1,8 @@
 /* ========================================
-   Anime.js — Hero Geometric Grid Effect
-   Staggered tile grid with mouse-reactive
-   ripple wave. Inspired by Hyperplexed.
-   Only affects the hero section.
+   Anime.js — Premium Hero Grid Effect
+   Inspired by animejs.com homepage
+   Dense dot grid + radial scale stagger +
+   mouse-interactive ripple + color waves
    ======================================== */
 (function () {
   'use strict';
@@ -10,9 +10,10 @@
   if (typeof anime === 'undefined') return;
 
   /* -------------------------------------------------------
-     STAGGERED DOT GRID — Interactive hero background
-     A grid of small geometric dots that react to mouse
-     position with a radiating wave effect.
+     STAGGERED DOT GRID — Full hero background
+     Dense grid of dots with scale/opacity stagger
+     radiating from center, reactive to mouse clicks
+     and movements. Exact same pattern as animejs.com
      ------------------------------------------------------- */
   function createHeroGrid() {
     const hero = document.getElementById('hero');
@@ -23,109 +24,184 @@
     wrapper.setAttribute('aria-hidden', 'true');
     hero.insertBefore(wrapper, hero.firstChild);
 
-    const tileSize = 50;
-    let columns, rows, tiles = [];
+    const gap = 28;       // space between dots
+    let columns, rows, dots = [];
+    let currentAnimation = null;
 
     function buildGrid() {
-      const w = wrapper.offsetWidth || window.innerWidth;
-      const h = wrapper.offsetHeight || window.innerHeight;
-      columns = Math.ceil(w / tileSize);
-      rows = Math.ceil(h / tileSize);
+      const w = hero.offsetWidth;
+      const h = hero.offsetHeight;
+      columns = Math.floor(w / gap);
+      rows = Math.floor(h / gap);
+
+      // Center the grid
+      const offsetX = (w - columns * gap) / 2;
+      const offsetY = (h - rows * gap) / 2;
 
       wrapper.innerHTML = '';
       wrapper.style.setProperty('--cols', columns);
-      wrapper.style.setProperty('--tile-size', tileSize + 'px');
-      tiles = [];
+      wrapper.style.setProperty('--gap', gap + 'px');
+      wrapper.style.setProperty('--offset-x', offsetX + 'px');
+      wrapper.style.setProperty('--offset-y', offsetY + 'px');
+      dots = [];
 
-      for (let i = 0; i < columns * rows; i++) {
-        const tile = document.createElement('div');
-        tile.className = 'anime-tile';
-        wrapper.appendChild(tile);
-        tiles.push(tile);
+      const total = columns * rows;
+      const fragment = document.createDocumentFragment();
+
+      for (let i = 0; i < total; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'anime-dot';
+        fragment.appendChild(dot);
+        dots.push(dot);
       }
+
+      wrapper.appendChild(fragment);
     }
 
     buildGrid();
 
-    // Throttled resize
+    // Debounced resize
     let resizeTimer;
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(buildGrid, 300);
+      resizeTimer = setTimeout(() => {
+        buildGrid();
+        playIntroAnimation();
+      }, 400);
     });
 
-    // Mouse-reactive ripple wave
-    let isAnimating = false;
+    /* --- Radial stagger wave animation --- */
+    function animateGrid(fromIndex) {
+      if (currentAnimation) currentAnimation.pause();
 
-    wrapper.addEventListener('mousemove', (e) => {
-      if (isAnimating) return;
-      isAnimating = true;
+      currentAnimation = anime({
+        targets: dots,
+        scale: [
+          { value: 1.35, easing: 'easeOutSine', duration: 250 },
+          { value: 1, easing: 'easeInOutQuad', duration: 500 },
+        ],
+        opacity: [
+          { value: 0.7, easing: 'easeOutSine', duration: 250 },
+          { value: 0.12, easing: 'easeInOutQuad', duration: 500 },
+        ],
+        delay: anime.stagger(80, {
+          grid: [columns, rows],
+          from: fromIndex,
+        }),
+      });
+    }
 
+    /* --- Mouse click/tap → ripple from that point --- */
+    wrapper.addEventListener('click', (e) => {
       const rect = wrapper.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
+      const offsetX = parseFloat(getComputedStyle(wrapper).getPropertyValue('--offset-x')) || 0;
+      const offsetY = parseFloat(getComputedStyle(wrapper).getPropertyValue('--offset-y')) || 0;
 
-      // Calculate which tile index the mouse is over
-      const col = Math.floor(x / tileSize);
-      const row = Math.floor(y / tileSize);
-      const index = row * columns + col;
+      const col = Math.floor((x - offsetX) / gap);
+      const row = Math.floor((y - offsetY) / gap);
+      const index = Math.min(Math.max(row * columns + col, 0), dots.length - 1);
 
+      animateGrid(index);
+    });
+
+    /* --- Mouse move → subtle tracking highlight --- */
+    let moveThrottle = 0;
+    wrapper.addEventListener('mousemove', (e) => {
+      const now = Date.now();
+      if (now - moveThrottle < 80) return;
+      moveThrottle = now;
+
+      const rect = wrapper.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      const offsetX = parseFloat(getComputedStyle(wrapper).getPropertyValue('--offset-x')) || 0;
+      const offsetY = parseFloat(getComputedStyle(wrapper).getPropertyValue('--offset-y')) || 0;
+
+      // Highlight dots near mouse
+      dots.forEach((dot, i) => {
+        const col = i % columns;
+        const row = Math.floor(i / columns);
+        const dx = (col * gap + offsetX + gap / 2) - mx;
+        const dy = (row * gap + offsetY + gap / 2) - my;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < 80) {
+          dot.style.opacity = '0.6';
+          dot.style.transform = 'scale(1.8)';
+          dot.style.background = 'var(--accent)';
+        } else if (dist < 150) {
+          const t = 1 - (dist - 80) / 70;
+          dot.style.opacity = (0.12 + t * 0.25).toFixed(2);
+          dot.style.transform = `scale(${1 + t * 0.5})`;
+          dot.style.background = '';
+        } else {
+          dot.style.opacity = '';
+          dot.style.transform = '';
+          dot.style.background = '';
+        }
+      });
+    });
+
+    wrapper.addEventListener('mouseleave', () => {
+      dots.forEach(dot => {
+        dot.style.opacity = '';
+        dot.style.transform = '';
+        dot.style.background = '';
+      });
+    });
+
+    /* --- Intro: radial entrance from center --- */
+    function playIntroAnimation() {
       anime({
-        targets: tiles,
-        opacity: [
-          { value: 0.25, duration: 300 },
-          { value: 0.04, duration: 800 },
-        ],
+        targets: dots,
         scale: [
-          { value: 1.4, duration: 300 },
+          { value: 0.2, duration: 0 },
           { value: 1, duration: 800 },
+        ],
+        opacity: [
+          { value: 0, duration: 0 },
+          { value: 0.12, duration: 800 },
         ],
         delay: anime.stagger(40, {
           grid: [columns, rows],
-          from: index,
+          from: 'center',
         }),
-        easing: 'easeInOutQuad',
-        complete: () => { isAnimating = false; },
-      });
-    });
-
-    // Initial entrance ripple from center
-    anime({
-      targets: tiles,
-      opacity: [0, 0.04],
-      scale: [0.5, 1],
-      delay: anime.stagger(20, {
-        grid: [columns, rows],
-        from: 'center',
-      }),
-      duration: 1000,
-      easing: 'easeOutQuad',
-    });
-
-    // Periodic ambient pulse
-    function ambientPulse() {
-      const randomIndex = Math.floor(Math.random() * tiles.length);
-      anime({
-        targets: tiles,
-        opacity: [
-          { value: 0.12, duration: 600 },
-          { value: 0.04, duration: 1000 },
-        ],
-        delay: anime.stagger(25, {
-          grid: [columns, rows],
-          from: randomIndex,
-        }),
-        easing: 'easeInOutSine',
-        complete: () => setTimeout(ambientPulse, anime.random(4000, 8000)),
+        easing: 'easeOutQuad',
       });
     }
-    setTimeout(ambientPulse, 3000);
+
+    /* --- Ambient breathing pulse (every ~6s) --- */
+    function ambientPulse() {
+      const fromIdx = Math.floor(Math.random() * dots.length);
+
+      anime({
+        targets: dots,
+        scale: [
+          { value: 1.25, easing: 'easeOutSine', duration: 400 },
+          { value: 1, easing: 'easeInOutQuad', duration: 600 },
+        ],
+        opacity: [
+          { value: 0.35, easing: 'easeOutSine', duration: 400 },
+          { value: 0.12, easing: 'easeInOutQuad', duration: 600 },
+        ],
+        delay: anime.stagger(50, {
+          grid: [columns, rows],
+          from: fromIdx,
+        }),
+        complete: () => setTimeout(ambientPulse, anime.random(5000, 9000)),
+      });
+    }
+
+    // Start!
+    playIntroAnimation();
+    setTimeout(ambientPulse, 4000);
   }
 
   /* -------------------------------------------------------
-     SVG CORNER FRAMES — Geometric accent lines
-     Minimal corner brackets around the hero content
-     drawn with stroke-dashoffset animation
+     SVG GEOMETRIC FRAME — Architectural corner accents
+     with animated line drawing
      ------------------------------------------------------- */
   function createCornerFrames() {
     const hero = document.getElementById('hero');
@@ -137,50 +213,45 @@
     svg.setAttribute('viewBox', '0 0 1200 800');
     svg.setAttribute('preserveAspectRatio', 'none');
 
-    // Corner paths — clean architectural brackets
-    const paths = [
-      'M30,120 L30,30 L120,30',        // Top-left
-      'M1080,30 L1170,30 L1170,120',    // Top-right
-      'M30,680 L30,770 L120,770',       // Bottom-left
-      'M1080,770 L1170,770 L1170,680',  // Bottom-right
+    const pathsData = [
+      // Corner brackets
+      'M20,100 L20,20 L100,20',
+      'M1100,20 L1180,20 L1180,100',
+      'M20,700 L20,780 L100,780',
+      'M1100,780 L1180,780 L1180,700',
+      // Cross-hair accents
+      'M590,15 L610,15',
+      'M590,785 L610,785',
+      'M15,395 L15,405',
+      'M1185,395 L1185,405',
     ];
 
-    const pathElements = [];
-    paths.forEach(d => {
+    const paths = [];
+    pathsData.forEach(d => {
       const path = document.createElementNS(svgNS, 'path');
       path.setAttribute('d', d);
       path.setAttribute('fill', 'none');
-      path.setAttribute('stroke', 'rgba(240,192,64,0.2)');
-      path.setAttribute('stroke-width', '1.5');
+      path.setAttribute('stroke', 'rgba(240,192,64,0.18)');
+      path.setAttribute('stroke-width', '1');
       path.setAttribute('stroke-linecap', 'round');
       svg.appendChild(path);
-      pathElements.push(path);
+      paths.push(path);
     });
-
-    // Small diamond accent at center-bottom
-    const diamond = document.createElementNS(svgNS, 'path');
-    diamond.setAttribute('d', 'M590,760 L600,750 L610,760 L600,770 Z');
-    diamond.setAttribute('fill', 'none');
-    diamond.setAttribute('stroke', 'rgba(240,192,64,0.15)');
-    diamond.setAttribute('stroke-width', '1');
-    svg.appendChild(diamond);
-    pathElements.push(diamond);
 
     hero.appendChild(svg);
 
-    // SVG line drawing animation
+    // SVG line drawing
     anime({
-      targets: pathElements,
+      targets: paths,
       strokeDashoffset: [anime.setDashoffset, 0],
-      duration: 1500,
+      duration: 1200,
       easing: 'easeInOutCubic',
-      delay: anime.stagger(200, { start: 500 }),
+      delay: anime.stagger(120, { start: 600 }),
     });
   }
 
   /* -------------------------------------------------------
-     HERO TEXT ENTRANCE — Clean fade-up sequence
-     Only animates hero elements, nothing else
+     HERO TEXT ENTRANCE — Clean timeline
      ------------------------------------------------------- */
   function initHeroEntrance() {
     const tl = anime.timeline({ easing: 'easeOutCubic' });
@@ -190,59 +261,63 @@
       translateY: [25, 0],
       opacity: [0, 1],
       duration: 800,
-      delay: 200,
+      delay: 100,
     });
 
     tl.add({
       targets: '#heroTitle',
-      translateY: [20, 0],
+      translateY: [18, 0],
       opacity: [0, 1],
-      duration: 700,
+      duration: 650,
     }, '-=500');
 
     tl.add({
       targets: '.tagline',
-      translateY: [15, 0],
+      translateY: [12, 0],
       opacity: [0, 1],
-      duration: 600,
-    }, '-=400');
+      duration: 550,
+    }, '-=350');
 
     tl.add({
       targets: '.hero-photo',
-      scale: [0.9, 1],
+      scale: [0.92, 1],
       opacity: [0, 1],
-      duration: 900,
+      duration: 800,
       easing: 'easeOutQuart',
-    }, '-=700');
+    }, '-=600');
 
     tl.add({
       targets: '.hero-buttons .btn',
-      translateY: [20, 0],
+      translateY: [15, 0],
       opacity: [0, 1],
-      duration: 500,
-      delay: anime.stagger(70),
-    }, '-=400');
+      duration: 450,
+      delay: anime.stagger(60),
+    }, '-=350');
 
     tl.add({
       targets: '.stat-item',
-      translateY: [20, 0],
+      translateY: [15, 0],
       opacity: [0, 1],
-      duration: 500,
-      delay: anime.stagger(80),
+      duration: 450,
+      delay: anime.stagger(70),
     }, '-=200');
   }
 
   /* -------------------------------------------------------
-     INITIALIZE — After content is rendered
+     INIT
      ------------------------------------------------------- */
   function init() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.querySelectorAll('#heroName,#heroTitle,.tagline,.hero-photo,.hero-buttons .btn,.stat-item')
+        .forEach(el => el.style.opacity = '1');
+      return;
+    }
 
     setTimeout(() => {
       createHeroGrid();
       createCornerFrames();
       initHeroEntrance();
-    }, 80);
+    }, 50);
   }
 
   if (document.readyState === 'complete') {

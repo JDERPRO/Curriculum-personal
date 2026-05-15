@@ -740,44 +740,43 @@ body::before {
 @media (max-width: 600px) { .seminars-list { grid-template-columns: 1fr; } }
 
 /* ========================================
-   ANIME.JS — Hero Grid & Effects
+   ANIME.JS — Hero Dot Grid (animejs.com style)
    ======================================== */
 
-/* --- Interactive Staggered Dot Grid --- */
+/* --- Dense Dot Grid Container --- */
 .anime-grid-wrapper {
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 100%;
   display: grid;
-  grid-template-columns: repeat(var(--cols), var(--tile-size));
+  grid-template-columns: repeat(var(--cols), var(--gap));
+  justify-content: center;
+  align-content: center;
+  padding-left: var(--offset-x);
+  padding-top: var(--offset-y);
   pointer-events: auto;
   z-index: 0;
   overflow: hidden;
+  cursor: crosshair;
 }
-.anime-tile {
-  width: var(--tile-size);
-  height: var(--tile-size);
-  position: relative;
-  opacity: 0.04;
+
+/* --- Individual Dot --- */
+.anime-dot {
+  width: var(--gap);
+  height: var(--gap);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.12;
+  transition: opacity 0.15s ease, transform 0.15s ease, background 0.2s ease;
 }
-.anime-tile::before {
+.anime-dot::before {
   content: '';
-  position: absolute;
-  top: 50%; left: 50%;
-  width: 3px; height: 3px;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
-  background: var(--accent);
-  transform: translate(-50%, -50%);
-  transition: background 0.3s;
-}
-.anime-tile::after {
-  content: '';
-  position: absolute;
-  top: 50%; left: 50%;
-  width: 20px; height: 20px;
-  border: 0.5px solid rgba(240,192,64,0.08);
-  transform: translate(-50%, -50%) rotate(45deg);
-  border-radius: 1px;
+  background: rgba(240,192,64,0.8);
+  box-shadow: 0 0 4px rgba(240,192,64,0.15);
 }
 
 /* --- SVG Corner Frames --- */
