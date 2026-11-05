@@ -3,7 +3,7 @@
 🏗️ **BIM Manager & Developer** | Automatización Revit API · Python · C#
 
 ## 🌐 Ver CV Online
-👉 [[https://JDERPRO.github.io/cv/](https://JDERPRO.github.io/cv/](https://jderpro.github.io/Curriculum-personal/))
+👉 https://jderpro.github.io/Curriculum-personal/
 
 ## 📁 Estructura
 ```
