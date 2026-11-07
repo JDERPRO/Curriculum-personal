@@ -11,6 +11,11 @@
   <meta property="og:description" content="Arquitecto & Desarrollador BIM especializado en automatización con Revit API, Python y C#.">
   <meta property="og:type" content="website">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⬡</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="preload" href="data/cv-data.json" as="fetch" crossorigin>
+  <link rel="preload" href="assets/profile.webp" as="image" type="image/webp">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -49,7 +54,7 @@
           <div class="hero-buttons" id="heroButtons"></div>
         </div>
         <div class="hero-photo">
-          <img id="heroPhoto" src="" alt="Jorge Ramirez Guachalla" loading="eager">
+          <img id="heroPhoto" src="assets/profile.webp" alt="Jorge Ramirez Guachalla" width="300" height="300" fetchpriority="high" decoding="async">
         </div>
       </div>
       <div class="stats-bar" id="statsBar"></div>
@@ -152,9 +157,9 @@
     </div>
   </footer>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
-  <script src="js/particles.js"></script>
-  <script src="js/app.js"></script>
-  <script src="js/anime-effects.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js" defer></script>
+  <script src="js/particles.js" defer></script>
+  <script src="js/app.js" defer></script>
+  <script src="js/anime-effects.js" defer></script>
 </body>
 </html>

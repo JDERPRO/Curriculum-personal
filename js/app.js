@@ -1,6 +1,6 @@
 /* ========================================
-   CV Professional — PRO Rendering Engine
-   v3.0 – Clean, no-emoji, PDF export
+   CV Professional — PRO Rendering Engine (Optimized)
+   v3.2 – High Performance & Smooth Scrolling
    ======================================== */
 (async function () {
   'use strict';
@@ -24,17 +24,22 @@
     $('#heroTitle').textContent = `${p.title} | ${p.subtitle}`;
 
     const photo = $('#heroPhoto');
-    photo.src = p.photo;
-    photo.onerror = () => {
-      photo.src = `https://ui-avatars.com/api/?name=Jorge+Ramirez&size=300&background=f0c040&color=0a0a0f&font-size=0.33&bold=true`;
-    };
+    if (photo) {
+      photo.src = p.photo;
+      photo.onerror = () => {
+        photo.src = 'FotoPerfil.png';
+        photo.onerror = () => {
+          photo.src = 'https://ui-avatars.com/api/?name=Jorge+Ramirez&size=300&background=f0c040&color=0a0a0f&font-size=0.33&bold=true';
+        };
+      };
+    }
 
     $('#heroButtons').innerHTML = `
       <a href="#contact" class="btn btn-primary"><span>Contactar</span></a>
       <a href="${p.linkedin}" target="_blank" class="btn btn-outline">LinkedIn</a>
       <a href="${p.github}" target="_blank" class="btn btn-outline">GitHub</a>
       <a href="${p.website}" target="_blank" class="btn btn-outline">
-        <img src="Logo_BitForm3.png" alt="Bitform" style="height:18px;width:auto;display:inline-block;vertical-align:middle;margin-right:4px;filter:brightness(1.2);">Bitform
+        <img src="assets/logo_bitform.webp" onerror="this.src='Logo_BitForm3.png'" alt="Bitform" width="18" height="18" decoding="async" style="height:18px;width:auto;display:inline-block;vertical-align:middle;margin-right:4px;filter:brightness(1.2);">Bitform
       </a>
       <button class="btn btn-outline" id="downloadPdfBtn" onclick="generatePDF()">Descargar CV</button>
     `;
@@ -49,6 +54,7 @@
       '// creando plugins que hablan por mí'
     ];
     const el = $('#typingText');
+    if (!el) return;
     let phraseIdx = 0, charIdx = 0, deleting = false;
     function type() {
       const current = phrases[phraseIdx];
@@ -107,7 +113,6 @@
 
   /* ============ EDUCATION ============ */
   function renderEducation() {
-    const icons = { 'true': '◈', 'false': '◇' };
     $('#educationGrid').innerHTML = DATA.education.map(edu => `
       <div class="card edu-card ${edu.highlight ? 'highlight' : ''} reveal">
         <div class="card-glow"></div>
@@ -176,7 +181,10 @@
 
   /* ============ PROJECTS ============ */
   function renderProjects() {
-    const projIcons = ['<img src="Logo_BitForm3.png" alt="Bitform" style="height:36px;width:auto;">', '▶', '◈', '≡'];
+    const projIcons = [
+      '<img src="assets/logo_bitform.webp" onerror="this.src=\'Logo_BitForm3.png\'" alt="Bitform" width="36" height="36" loading="lazy" decoding="async" style="height:36px;width:auto;">',
+      '▶', '◈', '≡'
+    ];
     $('#projectsGrid').innerHTML = DATA.projects.map((proj, i) => `
       <div class="card project-card reveal">
         <div class="card-glow"></div>
@@ -373,9 +381,9 @@
     }, 2000);
   };
 
-  /* ============ SCROLL REVEAL ============ */
+  /* ============ SCROLL REVEAL (Unobserve on entrance) ============ */
   function initScrollReveal() {
-    const observer = new IntersectionObserver((entries) => {
+    const observer = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
@@ -385,46 +393,105 @@
               setTimeout(() => bar.classList.add('animated'), 1400);
             }, 200);
           });
+          // Unobserve once revealed to save CPU during subsequent scrolls
+          obs.unobserve(entry.target);
         }
       });
     }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+
     $$('.reveal').forEach(el => observer.observe(el));
   }
 
-  /* ============ 3D TILT + GLOW ============ */
+  /* ============ 3D TILT + GLOW (Optimized & Desktop-only) ============ */
   function initCardTilt() {
+    // Disable on touch screens for speed
+    if (window.matchMedia('(pointer: coarse)').matches) return;
+
     $$('.card').forEach(card => {
       const glow = card.querySelector('.card-glow');
+      let rect = null;
+      let rafPending = false;
+      let mouseX = 0, mouseY = 0;
+
+      card.addEventListener('mouseenter', () => {
+        rect = card.getBoundingClientRect();
+      }, { passive: true });
+
       card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const cx = rect.width / 2;
-        const cy = rect.height / 2;
-        card.style.transform = `perspective(800px) rotateX(${(y - cy) / cy * -4}deg) rotateY(${(x - cx) / cx * 4}deg) translateY(-3px)`;
-        if (glow) { glow.style.left = x + 'px'; glow.style.top = y + 'px'; }
+        if (!rect) rect = card.getBoundingClientRect();
+        mouseX = e.clientX - rect.left;
+        mouseY = e.clientY - rect.top;
+
+        if (!rafPending) {
+          rafPending = true;
+          requestAnimationFrame(() => {
+            rafPending = false;
+            if (!rect) return;
+            const cx = rect.width / 2;
+            const cy = rect.height / 2;
+            card.style.transform = `perspective(800px) rotateX(${(mouseY - cy) / cy * -3}deg) rotateY(${(mouseX - cx) / cx * 3}deg) translateY(-3px)`;
+            if (glow) {
+              glow.style.left = mouseX + 'px';
+              glow.style.top = mouseY + 'px';
+            }
+          });
+        }
+      }, { passive: true });
+
+      card.addEventListener('mouseleave', () => {
+        rect = null;
+        card.style.transform = '';
       });
-      card.addEventListener('mouseleave', () => { card.style.transform = ''; });
     });
   }
 
-  /* ============ SCROLL PROGRESS ============ */
-  function initScrollProgress() {
-    window.addEventListener('scroll', () => {
-      const h = document.documentElement.scrollHeight - window.innerHeight;
-      $('#scrollProgress').style.width = (window.scrollY / h * 100) + '%';
-    });
+  /* ============ UNIFIED SCROLL HANDLER (RAF-throttled & passive) ============ */
+  function initScrollHandlers() {
+    const progressEl = $('#scrollProgress');
+    const navbarEl = $('#navbar');
+    const backToTopBtn = $('#backToTop');
+    let ticking = false;
+
+    function onScroll() {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(() => {
+          const scrollY = window.scrollY;
+          const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+
+          if (progressEl && maxScroll > 0) {
+            progressEl.style.width = (scrollY / maxScroll * 100) + '%';
+          }
+          if (navbarEl) {
+            navbarEl.classList.toggle('scrolled', scrollY > 80);
+          }
+          if (backToTopBtn) {
+            backToTopBtn.classList.toggle('visible', scrollY > 500);
+          }
+          ticking = false;
+        });
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    if (backToTopBtn) {
+      backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
   }
 
-  /* ============ NAVBAR ============ */
-  function initNav() {
+  /* ============ NAVBAR TOGGLE ============ */
+  function initNavToggle() {
     const toggle = $('#navToggle');
     const links = $('#navLinks');
-    toggle.addEventListener('click', () => links.classList.toggle('active'));
-    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => links.classList.remove('active')));
-    window.addEventListener('scroll', () => {
-      $('#navbar').classList.toggle('scrolled', window.scrollY > 80);
-    });
+    if (toggle && links) {
+      toggle.addEventListener('click', () => links.classList.toggle('active'));
+      links.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => links.classList.remove('active'));
+      });
+    }
   }
 
   /* ============ ACTIVE NAV ============ */
@@ -434,7 +501,9 @@
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`));
+          navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`);
+          });
         }
       });
     }, { threshold: 0.3 });
@@ -466,7 +535,7 @@
     const sectionIds = ['about', 'experience', 'education', 'certifications', 'skills', 'projects', 'awards', 'contact'];
     sectionIds.forEach((id, i) => {
       const title = document.querySelector(`#${id} .section-title`);
-      if (title) {
+      if (title && !title.parentElement.querySelector('.section-number')) {
         const num = document.createElement('div');
         num.className = 'section-number';
         num.textContent = `0${i + 1}`;
@@ -475,20 +544,9 @@
     });
   }
 
-  /* ============ BACK TO TOP ============ */
-  function initBackToTop() {
-    const btn = $('#backToTop');
-    window.addEventListener('scroll', () => {
-      btn.classList.toggle('visible', window.scrollY > 500);
-    });
-    btn.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-  }
-
   /* ============ ANIMATED COUNTERS ============ */
   function initCounters() {
-    const observer = new IntersectionObserver((entries) => {
+    const observer = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.querySelectorAll('.stat-value').forEach(el => {
@@ -504,7 +562,7 @@
               el.textContent = prefix + current + suffix;
             }, 30);
           });
-          observer.unobserve(entry.target);
+          obs.unobserve(entry.target);
         }
       });
     }, { threshold: 0.5 });
@@ -532,10 +590,9 @@
     initTyping();
     initScrollReveal();
     initCardTilt();
-    initScrollProgress();
-    initNav();
+    initScrollHandlers();
+    initNavToggle();
     initActiveNav();
-    initBackToTop();
     initCounters();
   });
 

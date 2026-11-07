@@ -4,7 +4,6 @@
    Version: 2.0 PRO
    ======================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
 /* --- CSS Variables --- */
 :root {
@@ -84,7 +83,7 @@ body::before {
 
 /* --- Utility --- */
 .container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; position: relative; z-index: 2; }
-.section { padding: 120px 0; position: relative; }
+.section { padding: 120px 0; position: relative; content-visibility: auto; contain-intrinsic-size: 1px 700px; }
 .section-title {
   font-family: var(--font-heading);
   font-size: 2.2rem;
@@ -371,7 +370,7 @@ body::before {
   transform: translate(-50%, -50%);
   filter: blur(40px);
 }
-.card:hover { border-color: var(--border-hover); background: var(--bg-card-hover); }
+.card:hover { border-color: var(--border-hover); background: var(--bg-card-hover); will-change: transform; }
 .card:hover .card-glow { opacity: 0.15; }
 
 /* --- Timeline (Experience) --- */
@@ -768,7 +767,7 @@ body::before {
   align-items: center;
   justify-content: center;
   opacity: 0.12;
-  transition: opacity 0.15s ease, transform 0.15s ease, background 0.2s ease;
+  contain: layout style paint;
 }
 .anime-dot::before {
   content: '';
